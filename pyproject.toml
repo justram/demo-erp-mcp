@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "demo-erp-mcp"
+version = "0.1.0"
+description = "Demo ERP MCP project"
+readme = "README.md"
+requires-python = ">=3.12"
+license = {text = "Apache-2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "google-adk",
+    "fastmcp @ git+https://github.com/jlowin/fastmcp@3ab1ee7564eed37f17ebc3bd98efa88144147546",
+    "pyyaml",
+    "sqlalchemy",
+    # The following are likely brought in by the above, but were explicitly in requirements.txt
+    # and are often direct dependencies for projects using these tools.
+    # If not directly imported by *your* code (agent.py, server.py, etc.), they can be removed.
+    "fastapi", # Often used with ADK/MCP for web aspects
+    "httpx",   # For async http requests, often used by google libraries
+    "uvicorn", # For running FastAPI if used
+    "pydantic", # Data validation, often used with FastAPI/ADK
+    "click" # For CLIs, if any of your scripts become CLIs
+] 
