@@ -97,19 +97,27 @@ mcp = FastMCP(name="sql-mcp-server")
 
 
 @mcp.tool()
-def list_tables() -> List[Dict[str, Any]]:
+def inspect_database() -> List[Dict[str, Any]]:
     """
-    List all user-defined tables in the database, including their schema and, if available,
-    a description. Uses SQLAlchemy Inspector for database-agnostic metadata.
+    Inspects the connected database and retrieves a comprehensive list of all user-defined tables.
+    For each table, it provides the schema name, table name, and a description.
+    The description is sourced from table comments (for PostgreSQL) or a 'data/schema.yaml' file (for SQLite).
+    This tool utilizes SQLAlchemy Inspector for database-agnostic metadata retrieval.
+
     Args:
         None
+
     Returns:
-        A list of dictionaries, where each dictionary contains 'schema_name',
-        'table_name', and its 'description'. If an error occurs, returns a list
-        containing a single dictionary with an 'error' key.
+        A list of dictionaries, where each dictionary represents a table and contains:
+            'schema_name' (str): The name of the schema the table belongs to.
+            'table_name' (str): The name of the table.
+            'description' (str): A description of the table.
+        If an error occurs during inspection, it returns a list containing a single
+        dictionary with an 'error' key and a message describing the issue.
     """
     try:
-        with open("data/schema.yaml", "r") as f:
+        schema_path = Path(__file__).parent / "data" / "schema.yaml"
+        with open(schema_path, "r") as f:
             schema_data = yaml.safe_load(f)
         yaml_tables = schema_data.get("tables", {})
     except Exception as e:
@@ -183,7 +191,7 @@ def list_tables() -> List[Dict[str, Any]]:
         return tables_info
 
     except Exception as e:
-        return [{"error": f"An error occurred while listing tables: {str(e)}"}]
+        return [{"error": f"An error occurred while inspecting the database: {str(e)}"}]
 
 
 @mcp.tool()
