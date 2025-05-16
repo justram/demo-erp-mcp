@@ -4,7 +4,8 @@
 set -e
 
 # Prompt for Google API Key
-read -p "Please enter your GOOGLE_API_KEY: " GOOGLE_API_KEY
+read -sp "Please enter your GOOGLE_API_KEY: " GOOGLE_API_KEY
+echo # Add a newline after the hidden input
 
 # Create .env file
 echo "Creating .env file with your API_KEY..."
